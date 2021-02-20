@@ -156,36 +156,36 @@ def notification_handler(sender, data):
 	c3 = data["channel3"]
 
 	if data["path"] == "long_path" and data["big"] == True:
-		buff_count_long += 1
 		sp = data["sp"]
 		dp = data["dp"]
 		hr = data["hr"]
 		hrv = data["hrv"]
 		ml = data["ml"]
 		temperature = data["temperature"]
-	else:
-		buff_count_short += 1
 
 	if data["path"] == "long_path" and data["big"] == True:
-		save_file.write("{},{},{},{},{},{},{},{},{}\n".format(time.time(), idx, path, c1, c2, c3, energyB1_l, energyB2_l, energyB3_l))
+		save_file.write("{},{},{},{},{},{},{},{},{},{},{},{}\n".format(time.time(), idx, path, c1, c2, c3, energyB1_s, energyB2_s, energyB3_s, energyB1_l, energyB2_l, energyB3_l))
 	else:
-		save_file.write("{},{},{},{},{},{},{},{},{}\n".format(time.time(), idx, path, c1, c2, c3, energyB1_s, energyB2_s, energyB3_s))
+		save_file.write("{},{},{},{},{},{},{},{},{},{},{},{}\n".format(time.time(), idx, path, c1, c2, c3, energyB1_s, energyB2_s, energyB3_s, energyB1_l, energyB2_l, energyB3_l))
 
 	mag = math.sqrt( c1*c1 + c2*c2 + c3*c3 )
-	if data["path"] == "long_path" and data["big"] == True:
+
+	if (data["path"] == "long_path"):
 		long_mag_buff = np.roll(long_mag_buff, -1)
 		np.put(long_mag_buff, -1, mag)
+		getFFTEnergyBins(long_mag_buff, "long")
 	else:
 		short_mag_buff = np.roll(short_mag_buff, -1)
 		np.put(short_mag_buff, -1, mag)
-			
-	if (buff_count_long == 128):
-		getFFTEnergyBins(long_mag_buff, "long")
-		buff_count_long = 0
-
-	if (buff_count_short == 128):
 		getFFTEnergyBins(short_mag_buff, "short")
-		buff_count_short = 0
+			
+	# if (buff_count_long == 128):
+		
+		# buff_count_long = 0
+
+	# if (buff_count_short == 128):
+		
+		# buff_count_short = 0
 
 def triang_win(width,center=0.5):
     win = []
@@ -230,13 +230,14 @@ def getFFTEnergyBins(data, tag):
 		start = int(linear_center[i]/freq_unit)
 		energy.append(sum(list(map(lambda x:np.power(np.abs(x),2),spectrum[start:start + len(banks[i])] * banks[i]))))
 
-	print(str(energy[0]) + " " + str(energy[1]) + " " + str(energy[2]))
-
 	if (tag == "short"):
+		print("short: " + str(energy[0]) + " " + str(energy[1]) + " " + str(energy[2]))
 		energyB1_s = energy[0]
 		energyB2_s = energy[1]
 		energyB3_s = energy[2]
-	else:
+	
+	if (tag == "long"):
+		print("long: " + str(energy[0]) + " " + str(energy[1]) + " " + str(energy[2]))
 		energyB1_l = energy[0]
 		energyB2_l = energy[1]
 		energyB3_l = energy[2]
@@ -267,7 +268,7 @@ if __name__ == "__main__":
 	save_file = open("./data/{}.csv".format(time.time()), "w+")
 	# else:
 		# save_file = open(args.filename, "w+")
-	save_file.write("timestamp,idx,path,c1,c2,c3,p1,p2,p3\n")
+	save_file.write("timestamp,idx,path,c1,c2,c3,eb1_s,eb2_s,eb3_s,eb1_l,eb2_l,eb3_l\n")
 
 	#translate address to be multi-platform
 	# address = (
