@@ -20,6 +20,9 @@
 #log power bins
 #https://github.com/skylarkwireless/sklk-demos/blob/7f1cfd0974c88ff9633e5dd077b69951b653edb5/python/sklk_widgets/LogPowerFFT.py
 
+#fft energy bins
+#https://github.com/RockmanZheng/Digital-Speech-Recognizer/blob/6cf0b9edc4d040458f5172e811fd5e266ab284f1/0.3.8/src/SignalProcessor.py
+
 # -*- coding: utf-8 -*-
 """
 cayden, Blueberry
