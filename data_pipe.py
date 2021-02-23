@@ -100,7 +100,7 @@ energyB2_l = 0.0
 energyB3_l = 0.0
 
 #refer to select_pod.py to find address/mac
-pod_address = "56FFAB79-ACF1-4E4B-85B7-ED0C0A199973"
+pod_address = "A4BD2F7B-AEBD-49E5-9A00-D43AC7D73580"
 
 #unpack fNIRS byte string
 def unpack_fnirs(sender, packet):
